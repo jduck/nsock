@@ -4,7 +4,14 @@ no_dist
 autom4te.cache
 config.log
 config.cache
+config.status
+Makefile
+defs.h
+srcs.mk
 *.o
 *.a
 *.so
+count
+libnsock.spec
+errors.h
 

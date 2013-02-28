@@ -1,0 +1,18 @@
+CC = gcc
+CFLAGS = -Wall -ggdb -I..
+LDFLAGS = -L.. -lnsock
+
+include srcobj.mk
+
+all: nsock_test
+
+nsock_test: nsock_test.o $(OBJS)
+	$(CC) $(CFLAGS) -o nsock_test nsock_test.o $(OBJS) $(LDFLAGS)
+
+clean:
+	rm -f *.o nsock_test
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+# gcc -MM dependencie output

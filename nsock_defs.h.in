@@ -1,0 +1,13 @@
+/* nsock_defs.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
+
+/* Define if your C compiler doesn't accept -c and -o together.  */
+#undef NO_MINUS_C_MINUS_O
+
+/* define this if you have (working) POSIX (O_NONBLOCK) non-blocking */
+#undef NBLOCK_POSIX
+
+/* define this if you have BSD (O_NDELAY) non-blocking */
+#undef NBLOCK_BSD
+
+/* define this if you have SYSV (FIONBIO) non-blocking */
+#undef NBLOCK_SYSV

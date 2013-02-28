@@ -1,0 +1,93 @@
+dnl
+dnl don't understand?  http://www.gnu.org/manual/autoconf/
+dnl by: Joshua J. Drake <libnsock@qoop.org>
+dnl
+dnl last modified: 09/07/2001
+
+AC_INIT(.version)
+AC_CONFIG_HEADER(nsock_defs.h)
+
+dnl grok the version number from .version
+dnl
+VERSION=`cat .version`
+
+AC_REVISION($Revision: $VERSION $)
+
+echo "*** configuring libnsock v$VERSION"
+echo
+
+AC_SUBST(VERSION)
+
+dnl initial stuff
+dnl
+
+AC_PROG_CC
+AC_PROG_CC_C_O
+AC_PROG_CPP
+AC_CACHE_SAVE
+
+
+dnl check for non-blocking fd style available..
+dnl
+AC_MSG_CHECKING(non-blocking style)
+changequote(<<, >>)dnl
+<<
+precode='#include <sys/types.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <fcntl.h>
+#ifdef HAVE_FCNTLBITS_H
+# include <fcntlbits.h>
+#endif
+#include <sys/ioctl.h>
+#include <sys/file.h>
+#include <signal.h>
+
+void
+alarmed(int signum)
+{
+	exit(1);
+}
+
+int
+main()
+{
+	char b[12];
+	struct sockaddr x;
+	int f, l = sizeof(x);
+	f = socket(AF_INET, SOCK_DGRAM, 0);
+	if (f >= 0 && (fcntl(f, F_SETFL,'
+postcode=') != -1)) {
+		signal(SIGALRM, alarmed);
+		alarm(3);
+		recvfrom(f, b, 12, 0, &x, &l);
+		alarm(0);
+		exit(0);
+	}
+	exit(1);
+}'
+>>
+changequote([, ])dnl
+
+code="$precode O_NONBLOCK $postcode"
+
+AC_TRY_RUN($code,
+  AC_DEFINE(NBLOCK_POSIX)
+  AC_MSG_RESULT(posix),
+  code="$precode O_NDELAY $postcode"
+  AC_TRY_RUN($code,
+    AC_DEFINE(NBLOCK_BSD)
+    AC_MSG_RESULT(bsd),
+    code="$precode FIONBIO $postcode"
+    AC_TRY_RUN($code,
+      AC_DEFINE(NBLOCK_SYSV)
+      AC_MSG_RESULT(system v),
+      AC_MSG_WARN(i can't find a working non blocking system),
+      :),
+    :),
+  :)
+
+dnl create Makefile(s)
+dnl
+AC_OUTPUT(Makefile)

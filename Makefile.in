@@ -1,0 +1,81 @@
+CC = @CC@
+CFLAGS = @CFLAGS@
+# LDFLAGS = -lnsl -lsocket
+EXTLDFLAGS = -s
+
+VERSION = @VERSION@
+
+LIBNAME = libnsock
+
+OBJS = nsock_tcp_listen.o nsock_tcp_connect.o \
+	nsock_tcp_host.o nsock_tcp_free.o \
+	nsock_unix_listen.o nsock_unix_connect.o \
+	nsock_unix_free.o \
+	nsock_nonb.o nsock_resolve.o \
+	nsock_errors.o \
+	nsock_read.o nsock_readln.o \
+	nsock_write.o nsock_fdprintf.o \
+	nsock_io_pipe.o
+SRCS = nsock_tcp_listen.c nsock_tcp_connect.c \
+	nsock_tcp_host.c nsock_tcp_free.c \
+	nsock_unix_listen.c nsock_unix_connect.c \
+	nsock_unix_free.c \
+	nsock_nonb.c nsock_resolve.c \
+	nsock_errors.c \
+	nsock_read.c nsock_readln.c \
+	nsock_write.c nsock_fdprintf.c \
+	nsock_io_pipe.c
+INCS = nsock.h nsock_tcp.h nsock_unix.h nsock_resolve.h \
+	nsock_errors.h nsock_io_pipe.h
+
+all: srcs.mk static
+
+srcs.mk:
+	$(CC) $(CFLAGS) -MM *.c > srcs.mk
+
+shared: $(LIBNAME).so.$(VERSION)
+	ln -s $(LIBNAME).so.$(VERSION) $(LIBNAME).so
+
+static: $(LIBNAME).a
+
+targets:
+	@echo "valid targets: clean static shared distclean"
+
+
+$(LIBNAME).a: Makefile $(OBJS) $(SRCS) $(INCS)
+	ar rc $(LIBNAME).a $(OBJS)
+	ranlib $(LIBNAME).a
+
+
+$(LIBNAME).so.$(VERSION): Makefile $(OBJS) $(SRCS) $(INCS)
+	$(CC) $(CFLAGS) -fpic -shared -o $(LIBNAME).so.$(VERSION) $(OBJS) $(EXTLDFLAGS) $(LDFLAGS)
+
+static-clean:
+	rm -f $(LIBNAME).a
+	
+shared-clean:
+	rm -f $(LIBNAME).so.$(VERSION) $(LIBNAME).so
+	
+clean: static-clean shared-clean
+	rm -f *.o 
+
+distclean: clean
+	rm -f Makefile config.* nsock_defs.h nsock_defs.h.in configure
+	cd config; make
+
+dist: distclean
+	cd ..; tar zcvvf $(LIBNAME)-$(VERSION).tgz $(LIBNAME)-$(VERSION) \
+		-X $(LIBNAME)-$(VERSION)/.ignore
+
+.c.o:
+	$(CC) $(CFLAGS) -c $<
+
+
+# file dependencies
+nsock.h: nsock_defs.h
+nsock_defs.h: nsock_defs.h.in
+Makefile: configure
+configure: config/configure.in
+	cd config;make
+
+include srcs.mk

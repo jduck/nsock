@@ -1,0 +1,9 @@
+#!/bin/sh
+
+[ -n "$CFLAGS" ] || CFLAGS="-Wall -O2"
+export CFLAGS
+
+./configure $*
+make
+
+exit 0

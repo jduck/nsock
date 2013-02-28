@@ -1,0 +1,96 @@
+05/21/2004 	jjd 	- changed version to 0.9.2
+			- implemented flag for REUSE_ADDR socket option
+			- fixed nsock_resolve() to allow resolution of
+			  INADDR_ANY:ANY
+			- added RAND_SRC_PORT support to
+			  nsock_tcp_connect with source host
+			- if bound to a port of 0, we use getsockname
+			  to find out what the port really is
+			- changed tcp connect/listen calls to return
+			  negative values when there is a problem
+			  (instead of 0 for undefined error)
+			- allow 0 port passed to nsock_host()
+
+05/20/2004 	jjd 	- ensure nsock_readln() buffer is nul terminated
+			- merged my io_pipe stuff into libnsock
+			- used proper signedness for vars that cant be
+			  negative
+			- added timeout option to nsock_fdprintf()
+
+05/07/2004 	jjd	- changed version to 0.9.1
+			- fixed a bug where an empty source host was 
+			  being used if supplied
+
+04/27/2003 	jjd 	- created nsock_fdprintf()
+			- created "build" script
+
+04/26/2003 	jjd 	- created nsock_unix_init_listen() and
+			  nsock_unix_init_connect()
+
+10/02/2002	jjd	- fixed a minor bug in nsock_tcp_free where it
+			  could possibly have dereferenced a null
+			  pointer
+			- added possible error checking to
+			  nsock_tcp_connected()
+
+04/08/2002 	jjd 	- merged nsock_get_error into nsock_error for
+			  greater efficiency and removed the old
+			  function
+
+03/23/2002 	jjd 	- added nsock_read/write
+
+03/22/2002 	jjd 	- changed version to 0.9
+			- removed backwards compatible functions
+			- created nsock_tcp_init_connect and
+			  nsock_tcp_init_listen to initialize a
+			  malloc'd structure as needed..
+			- created nsock_tcp_host to put the hostname
+			  and port number into the correct format..
+			- switched checks for AF_UNSPEC to !AF_INET
+			- fixed a bug where the alarm timeout was not
+			  reset after a connect failure..
+
+03/20/2002 	jjd 	- changed version to 0.8.3
+			- finished renaming to nsock_* 
+
+02/20/2002	jjd	- changed version to 0.8.2.5
+			- created get*Err functions for programs that
+			  which to format their own errors..
+			- switched from string based paremters to a
+			  nice typedef'd structure that encompasses
+			  other methods of supplying from/to addresses
+			  and options...
+			- renamed all files to be more uniq to
+			  libnsock..
+			- added nsock_resolve()
+			- fixed bug w/using blocking connects while
+			  non-blocking are supported (wouldn't timeout)
+			  
+01/15/2002	jjd	- changed version to 0.8.2
+			- added is_connected() for non-blocking tcp
+			  connections
+			  
+01/10/2002	jjd	- changed version to 0.8.1
+			- added *Err procedures to accomodate for
+			  easier error displaying for * socket
+			  functions
+			- added a check for '=' preceding the hostname
+			  in tcpToHost used for blocking even if
+			  non-blocking is available..
+			- reversed the order of this file
+
+08/23/2001	jjd	- fixed a bug in unix_listen.c where by the
+			  listen would cause a crash because of
+			  modifying a hardcoded string
+
+09/07/2001	jjd	- moved libs/nsock to a new library libsockets
+			- added non_blocking connect() support for tcp
+			  sockets (unfortunately the use of this must
+			  be handled by the calling code)
+			  
+03/21/2001	jjd	- initial creation of this CHANGES file
+			- put the complete version # in the directory name
+			- added configure, configure.in, Makefile.in for
+			  "dist" make target to use the version # in the
+			  directory name
+			- modified Makefile.in to accomdate for above

@@ -132,7 +132,7 @@ clean: static-clean shared-clean here-clean sub-dirs-clean
 
 
 distclean: clean sub-dirs-dist-clean
-	rm -f Makefile config.* defs.h defs.h.in configure
+	rm -f Makefile config.* defs.h defs.h.in configure libnsock.spec
 	make -C config
 
 

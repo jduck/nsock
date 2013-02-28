@@ -91,7 +91,7 @@ nsock_inet_listen_parse(ns, addr)
    int res_ret;
    
    /* resolve the listen addr */
-   if (!(ns->inet_from = strdup(addr)))
+   if (!(ns->inet_from = (u_char *)strdup((char *)addr)))
      return nsock_error(ns, NSERR_OUT_OF_MEMORY);
    
    /* resolve it */

@@ -22,7 +22,7 @@ nsock_fdprintf(nsock_t *ns, const u_char *fmt, ...)
    
    va_start(vl, fmt);
    memset(tbuf, 0, sizeof(tbuf));
-   vsnprintf(tbuf, sizeof(tbuf) - 1, fmt, vl);
+   vsnprintf((char *)tbuf, sizeof(tbuf) - 1, (char *)fmt, vl);
    va_end(vl);
-   return nsock_write(ns, tbuf, strlen(tbuf));
+   return nsock_write(ns, tbuf, strlen((char *)tbuf));
 }

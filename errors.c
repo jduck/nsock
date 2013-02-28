@@ -125,7 +125,7 @@ nsockerror_t nsock_errors[NSERR_COUNT] =
 /*
  * return a pointer to the array entry for this error
  */
-const u_char *
+const char *
 nsock_strerror_n(ns_errno)
    u_int ns_errno;
 {
@@ -134,7 +134,7 @@ nsock_strerror_n(ns_errno)
    return nsock_errors[ns_errno].str;
 }
 
-const u_char *
+const char *
 nsock_strerror(ns)
    nsock_t *ns;
 {
@@ -146,11 +146,11 @@ nsock_strerror(ns)
  * return a pointer to a static buffer holding
  * the error along with its errno string if supplied
  */
-u_char *
+char *
 nsock_strerror_full_n(ns_errno)
    u_int ns_errno;
 {
-   static u_char ret_buf[1024 + 1];
+   static char ret_buf[1024 + 1];
    nsockerror_t *nse;
 #ifdef HAVE_SSL
    u_long ssl_err;
@@ -192,7 +192,7 @@ nsock_strerror_full_n(ns_errno)
    return ret_buf;
 }
 
-u_char *
+char *
 nsock_strerror_full(ns)
    nsock_t *ns;
 {

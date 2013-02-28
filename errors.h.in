@@ -10,8 +10,8 @@
 
 typedef struct __nsock_errors
 {
-   const u_char *str; 	/* error description */
-   u_char has_errno; 	/* errno set? */
+   const char *str; 	/* error description */
+   char has_errno; 	/* errno set? */
 } nsockerror_t;
 
 
@@ -134,11 +134,11 @@ extern 	nsockerror_t 	nsock_errors[NSERR_COUNT];
 
 
 /*	return type	decleration			*/
-extern const u_char *  	nsock_strerror_n(u_int);
-extern const u_char *  	nsock_strerror(nsock_t *);
+extern const char *  	nsock_strerror_n(u_int);
+extern const char *  	nsock_strerror(nsock_t *);
 
-extern u_char *		nsock_strerror_full_n(u_int);
-extern u_char *		nsock_strerror_full(nsock_t *);
+extern char *		nsock_strerror_full_n(u_int);
+extern char *		nsock_strerror_full(nsock_t *);
 
 
 /* used internally */

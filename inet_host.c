@@ -26,10 +26,10 @@ nsock_inet_host(host, port)
      return NULL;
    /* host and port.. */
    if (host)
-     snprintf(buf, sizeof(buf) - 1, "%s:%hu", host, (u_short)port);
+     snprintf((char *)buf, sizeof(buf) - 1, "%s:%hu", host, (u_short)port);
    /* only port */
    else
-     snprintf(buf, sizeof(buf) - 1, ":%hu", (u_short)port);
+     snprintf((char *)buf, sizeof(buf) - 1, ":%hu", (u_short)port);
    buf[sizeof(buf)-1] = '\0';
    return buf;
 }
@@ -44,12 +44,12 @@ nsock_inet_host_str(host, portstr)
    
    /* host and port.. */
    if (host && portstr)
-     snprintf(buf, sizeof(buf) - 1, "%s:%s", host, portstr);
+     snprintf((char *)buf, sizeof(buf) - 1, "%s:%s", host, portstr);
    /* only port */
    else if (portstr)
-     snprintf(buf, sizeof(buf) - 1, ":%s", portstr);
+     snprintf((char *)buf, sizeof(buf) - 1, ":%s", portstr);
    else if (host)
-     strncpy(buf, host, sizeof(buf) - 1);
+     strncpy((char *)buf, (char *)host, sizeof(buf) - 1);
    else
      return NULL;
    buf[sizeof(buf)-1] = '\0';
@@ -67,10 +67,10 @@ nsock_inet_host_has_port(addrstr)
    p = addrstr;
 #ifdef INET6
    /* check for ipv6 [x:x:x:x]:port */
-   if ((p = strchr(p, '[')))
+   if ((p = (u_char *)strchr((char *)p, '[')))
      {
 	p++;
-	if (!(p = strchr(p, ']')))
+	if (!(p = (u_char *)strchr((char *)p, ']')))
 	  return 0;
 	p++;
      }
@@ -79,7 +79,7 @@ nsock_inet_host_has_port(addrstr)
 #endif
    
    /* see if we have a : */
-   if ((p = strchr(p, ':')))
+   if ((p = (u_char *)strchr((char *)p, ':')))
      return 1;
    return 0;
 }

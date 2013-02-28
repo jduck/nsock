@@ -37,12 +37,12 @@ nsock_init(void)
 #if defined(HAVE_DEV_RANDOM) || defined(HAVE_DEV_URANDOM)
    /* figure out which file to use if we have one */
 # if defined(HAVE_DEV_RANDOM)
-   rand_file = "/dev/random";
+   rand_file = (u_char *)"/dev/random";
 # elif defined(HAVE_DEV_URANDOM)
-   rand_file = "/dev/urandom";
+   rand_file = (u_char *)"/dev/urandom";
 # endif
    /* get some random bytes from our pool */
-   fp = fopen(rand_file, "r");
+   fp = fopen((char *)rand_file, "r");
    if (fp)
      {
 	/* seed the random number generator from the dev */

@@ -22,9 +22,9 @@ main(void)
    u_int def_num = 0;
    
    printf("/* do not modified, automatically generated. modify the .in */\n\n");
-   while (fgets(buf, LINE_MAX + 1, stdin))
+   while (fgets((char *)buf, LINE_MAX + 1, stdin))
      {
-	nl = strrchr(buf, '\n');
+	nl = (u_char *)strrchr((char *)buf, '\n');
 	if (!nl)
 	  {
 	     fprintf(stderr, "Ack! line %d too long?\n", line);
@@ -33,7 +33,7 @@ main(void)
 	*nl = '\0';
 	
 	if (buf[0] == '#'
-	    && strstr(buf, LINE_MATCH)
+	    && strstr((char *)buf, LINE_MATCH)
 	    && *(nl - 1) == '$')
 	  {
 	     nl--;

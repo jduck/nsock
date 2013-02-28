@@ -106,14 +106,14 @@ nsock_bind(ns)
 	if (ns->unix_path)
 	  {
 	     /* remember where we are now */
-	     if (!getcwd(full_path, sizeof(full_path)))
+	     if (!getcwd((char *)full_path, sizeof(full_path)))
 	       {
 		  nsock_close(ns);
 		  return nsock_error(ns, NSERR_UNIX_BIND_GETCWD_FAILED);
 	       }
 	     
 	     /* go to where the socket is */
-	     if (chdir(ns->unix_path) == -1)
+	     if (chdir((char *)ns->unix_path) == -1)
 	       {
 		  nsock_close(ns);
 		  return nsock_error(ns, NSERR_UNIX_BIND_CHDIR_FAILED);
@@ -139,7 +139,7 @@ nsock_bind(ns)
 	     if (ns->unix_path)
 	       {
 		  /* go to where the socket is */
-		  if (chdir(full_path) == -1)
+		  if (chdir((char *)full_path) == -1)
 		    {
 		       nsock_close(ns);
 		       return nsock_error(ns, NSERR_UNIX_BIND_CHDIR_FAILED);

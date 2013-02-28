@@ -44,7 +44,7 @@ nsock_inet_resolve_fwd(ns, addrstr, sap)
      return nsock_error(ns, NSERR_NO_STORAGE);
    
    /* make a copy */
-   if (!(addrcopy = strdup(addrstr)))
+   if (!(addrcopy = (u_char *)strdup((char *)addrstr)))
      return nsock_error(ns, NSERR_OUT_OF_MEMORY);
    
    /* see if we have a port */
@@ -55,8 +55,8 @@ nsock_inet_resolve_fwd(ns, addrstr, sap)
      }
    
    /* recognize special cases for INADDRY_ANY */
-   if (strcmp(addrstr, "0") == 0 
-       || strcmp(addrstr, "any") == 0
+   if (strcmp((char *)addrstr, "0") == 0 
+       || strcmp((char *)addrstr, "any") == 0
        || *addrstr == '\0')
      addrstr = NULL;
    
@@ -79,12 +79,12 @@ nsock_inet_resolve_fwd(ns, addrstr, sap)
 	
 	/* try numeric first */
 	hints.ai_flags = AI_PASSIVE | AI_NUMERICHOST;
-	gai_ret = getaddrinfo(addrstr, portstr, &hints, &res);
+	gai_ret = getaddrinfo((char *)addrstr, (char *)portstr, &hints, &res);
 	if (gai_ret != 0)
 	  {
 	     /* try again with names :-/ */
 	     hints.ai_flags = AI_PASSIVE;
-	     gai_ret = getaddrinfo(addrstr, portstr, &hints, &res);
+	     gai_ret = getaddrinfo((char *)addrstr, (char *)portstr, &hints, &res);
 	  }
 	
 	/* failure :( */
@@ -136,7 +136,7 @@ nsock_inet_resolve_rev(ns, sap, addrstr, aslen)
 	if (ns && !(ns->opt & NSF_NO_REVERSE_NAME)
 	    && ((struct sockaddr_in *)sap)->sin_addr.s_addr == INADDR_ANY)
 	  {
-	     strcpy(hostbuf, "any");
+	     strcpy((char *)hostbuf, "any");
 	     hostbufp = NULL;
 	  }
 	salen = sizeof(struct sockaddr_in);
@@ -147,7 +147,7 @@ nsock_inet_resolve_rev(ns, sap, addrstr, aslen)
 	if (ns && !(ns->opt & NSF_NO_REVERSE_NAME)
 	    && memcmp(&((struct sockaddr_in6 *)sap)->sin6_addr, &in6addr_any, sizeof(in6addr_any)) == 0)
 	  {
-	     strcpy(hostbuf, "any6");
+	     strcpy((char *)hostbuf, "any6");
 	     hostbufp = NULL;
 	  }
 	salen = sizeof(struct sockaddr_in6);
@@ -170,8 +170,8 @@ nsock_inet_resolve_rev(ns, sap, addrstr, aslen)
      memset(hostbufp, 0, NI_MAXHOST);
    memset(servbuf, 0, sizeof(servbuf));
    gni_ret = getnameinfo((struct sockaddr *)sap, salen,
-			 hostbufp, hostbufp ? NI_MAXHOST - 1 : 0,
-			 servbuf, sizeof(servbuf) - 1,
+			 (char *)hostbufp, hostbufp ? NI_MAXHOST - 1 : 0,
+			 (char *)servbuf, sizeof(servbuf) - 1,
 			 flags);
    if (gni_ret != 0)
      {
@@ -180,7 +180,7 @@ nsock_inet_resolve_rev(ns, sap, addrstr, aslen)
      }
    
    /* it resolved! return the stuff in the buffer */
-   snprintf(addrstr, aslen - 1, "%s:%s", hostbuf, servbuf);
+   snprintf((char *)addrstr, aslen - 1, "%s:%s", hostbuf, servbuf);
    return NSERR_SUCCESS;
 }
 
@@ -198,11 +198,11 @@ nsock_inet_resolve_split(addrstr, hoststrp, portstrp)
    p = *hoststrp = addrstr;
 #ifdef INET6
    /* check for ipv6 [x:x:x:x]:port */
-   if ((p = strchr(p, '[')))
+   if ((p = (u_char *)strchr((char *)p, '[')))
      {
 	p++;
 	*hoststrp = p;
-	if (!(p = strchr(p, ']')))
+	if (!(p = (u_char *)strchr((char *)p, ']')))
 	  return NSERR_INET_RESOLVE_NOT_FOUND;
 	*p++ = '\0';
      }
@@ -211,7 +211,7 @@ nsock_inet_resolve_split(addrstr, hoststrp, portstrp)
 #endif
    
    /* see if we have a : */
-   if ((p = strchr(p, ':')))
+   if ((p = (u_char *)strchr((char *)p, ':')))
      {
 	*p++ = '\0';
 	*portstrp = p;

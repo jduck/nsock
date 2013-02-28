@@ -49,7 +49,7 @@ nsock_ssl_context_init(ns)
 	
 	/* is the cert usable? */
 	if (!SSL_CTX_use_certificate_chain_file(ns->ns_ssl.context, 
-						ns->ns_ssl.cert_file))
+						(char *)ns->ns_ssl.cert_file))
 	  return nsock_ssl_ctx_error(ns, NSERR_SSL_INVALID_CERT);
 	
 	/* do we have a different key file? */
@@ -60,7 +60,7 @@ nsock_ssl_context_init(ns)
 	  key_file = ns->ns_ssl.cert_file;
 	
 	/* does it work? */
-	if (!SSL_CTX_use_PrivateKey_file(ns->ns_ssl.context, key_file, 
+	if (!SSL_CTX_use_PrivateKey_file(ns->ns_ssl.context, (char *)key_file, 
 					 SSL_FILETYPE_PEM))
 	  return nsock_ssl_ctx_error(ns, NSERR_SSL_INVALID_KEY);
 	

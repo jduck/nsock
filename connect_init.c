@@ -92,7 +92,7 @@ nsock_inet_connect_parse(ns, from, to)
    if (from && *from)
      {
 	/* make a copy */
-	if (!(ns->inet_from = strdup(from)))
+	if (!(ns->inet_from = (u_char *)strdup((char *)from)))
 	  return nsock_error(ns, NSERR_OUT_OF_MEMORY);
 	
 	/* resolve it */
@@ -119,7 +119,7 @@ nsock_inet_connect_parse(ns, from, to)
      }
    
    /* ok, now check out the target */
-   if (!(ns->inet_to = strdup(to)))
+   if (!(ns->inet_to = (u_char *)strdup((char *)to)))
      return nsock_error(ns, NSERR_OUT_OF_MEMORY);
    
    /* resolve it */

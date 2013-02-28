@@ -1,0 +1,4 @@
+nsock
+=====
+
+Ninja Socket Library

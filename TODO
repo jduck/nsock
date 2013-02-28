@@ -1,12 +1,31 @@
-- do UDP support
 - add proxy support (async?)
+
+
 - possibly create some sort of accept wrapper that will deny
   connections from hosts that != nsocktcp_t.tin (semi-useless)
   - maybe support an ACL or tcp_wrappers
+- would be nice to have like nsock_inet_accept_one() to get a single
+  incoming connection
+
+
 - async dns support?
-- IPv6 support
+
+
 - add more tests
   - namely unix stuff, udp, ipv6
-- investigate truncation due to snprintf etc..
-- add support for looking up services in /etc/services
+
+
 - openssl support
+  - support specifying ciphers
+  - support certificate verifcation
+
+
+- support non-blocking on/off around read() and write() calls
+
+
+- possibly add an interface for getting/setting parts of the structure
+
+
+- some multi-address dns stuff would be nice
+
+

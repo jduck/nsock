@@ -1,0 +1,10 @@
+no_dist
+.gdb_history
+.ignore
+autom4te.cache
+config.log
+config.cache
+*.o
+*.a
+*.so
+

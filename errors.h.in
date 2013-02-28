@@ -1,0 +1,148 @@
+/*
+ * includes things needed for error reporting
+ * 
+ * written by Joshua J. Drake (jduck@EFNet, libnsock@qoop.org)
+ */
+
+#ifndef __NSOCK_ERRORS_H_
+#define __NSOCK_ERRORS_H_
+
+
+typedef struct __nsock_errors
+{
+   const u_char *str; 	/* error description */
+   u_char has_errno; 	/* errno set? */
+} nsockerror_t;
+
+
+/* types of errno that an error can have */
+#define NSERRNO_NSOCK 				0
+#define NSERRNO_LIBC 				1
+#define NSERRNO_RESOLV 				2
+#define NSERRNO_SSL 				3
+
+
+/* errors that should not be used ;) */
+#define NSERR_SUCCESS 				$
+#define NSERR_UNKNOWN_ERROR    			$
+
+/* generic errors */
+#define NSERR_NO_SUPPORT    			$
+#define NSERR_NO_STORAGE       			$
+#define NSERR_NO_DATA       			$
+#define NSERR_NO_SOCKET              		$
+#define NSERR_INVALID_DOMAIN         		$
+#define NSERR_INVALID_TYPE             		$
+#define NSERR_INVALID_STATE         		$
+#define NSERR_OUT_OF_MEMORY         		$
+
+/* errors for nsock_read() */
+#define NSERR_READ_ERROR 			$
+#define NSERR_READ_EOF 				$
+
+/* errors for nsock_write() */
+#define NSERR_WRITE_ERROR 			$
+#define NSERR_WRITE_EOF        			$
+
+/* errors for nsock_alarm() */
+#define NSERR_SIGACTION_FAILED 			$
+
+/* errors for nsock_socket() */
+#define NSERR_SOCKET_ALREADY        		$
+#define NSERR_SOCKET_FAILED 			$
+#define NSERR_SOCKET_SOCKOPT_FAILED    		$
+
+/* errors for nsock_close() */
+#define NSERR_CLOSE_FAILED 			$
+
+/* errors for nsock_bind() */
+#define NSERR_BIND_UNSUP_DOMAIN        		$
+#define NSERR_BIND_FAILED 			$
+
+/* errors for nsock_unix_bind() */
+#define NSERR_UNIX_BIND_GETCWD_FAILED 		$
+#define NSERR_UNIX_BIND_CHDIR_FAILED 		$
+#define NSERR_UNIX_BIND_CHMOD_FAILED 		$
+
+/* errors for nsock_inet_bind() */
+#define NSERR_INET_BIND_NO_ADDR 		$
+#define NSERR_INET_BIND_BAD_PORT 		$
+#define NSERR_INET_BIND_BAD_HOST 		$
+
+/* errors for nsock_listen() */
+#define NSERR_LISTEN_FAILED       		$
+
+/* errors for nsock_accept() */
+#define NSERR_ACCEPT_FAILED       		$
+#define NSERR_ACCEPT_NONE_AVAIL       		$
+
+/* errors for non-blocking stuff */
+#define NSERR_NONB_FAILED 		 	$
+
+/* errors for nsock_*_connect() */
+#define NSERR_CONNECT_FAILED 			$
+#define NSERR_CONNECT_IN_PROGRESS 		$
+
+/* errors for nsock_inet_connect_out() */
+#define NSERR_INET_CO_SRC_BAD_PORT	       	$
+#define NSERR_INET_CO_SRC_BAD_HOST	       	$
+#define NSERR_INET_CO_SRC_BAD_DOMAIN	       	$
+#define NSERR_INET_CO_SRC_UNKNOWN	       	$
+#define NSERR_INET_CO_DST_BAD_PORT	       	$
+#define NSERR_INET_CO_DST_BAD_HOST	       	$
+#define NSERR_INET_CO_DST_BAD_DOMAIN	       	$
+#define NSERR_INET_CO_DST_UNKNOWN	       	$
+
+/* errors for nsock_inet_listen() */
+#define NSERR_INET_LISTEN_BAD_PORT 		$
+#define NSERR_INET_LISTEN_BAD_HOST 		$
+#define NSERR_INET_LISTEN_UNKNOWN 		$
+
+/* errors for nsock_inet_resolve_*() */
+#define NSERR_INET_RESOLVE_NOT_FOUND	       	$
+#define NSERR_INET_RESOLVE_BAD_PORT 	       	$
+#define NSERR_INET_RESOLVE_BAD_HOST 	       	$
+
+/* errors for nsock_unix_resolve() */
+#define NSERR_UNIX_PATH_TOO_LONG 		$
+#define NSERR_UNIX_SOCK_TOO_LONG 		$
+#define NSERR_UNIX_BAD_PATH 			$
+
+/* errors for nsock_io_pipe() */
+#define NSERR_IOP_SELECT_FAILED 		$
+#define NSERR_IOP_DESC_EXCEPTION 		$
+
+/* errors for nsock_ssl_context_init */
+#define NSERR_SSL_NEW_CONTEXT_FAILED 		$
+#define NSERR_SSL_INVALID_CERT 			$
+#define NSERR_SSL_INVALID_KEY 			$
+#define NSERR_SSL_KEY_CERT_MISMATCH 		$
+#define NSERR_SSL_SET_CIPHERS_FAILED 		$
+
+/* errors for ssl library errors */
+#define NSERR_SSL_NEW_FAILED 			$
+#define NSERR_SSL_SYSCALL 			$
+#define NSERR_SSL_SSL 				$
+#define NSERR_SSL_UNKNOWN 			$
+
+#define NSERR_COUNT 				$
+
+
+/* error strings, and has_errno values */
+extern 	nsockerror_t 	nsock_errors[NSERR_COUNT];
+
+
+
+/*	return type	decleration			*/
+extern const u_char *  	nsock_strerror_n(u_int);
+extern const u_char *  	nsock_strerror(nsock_t *);
+
+extern u_char *		nsock_strerror_full_n(u_int);
+extern u_char *		nsock_strerror_full(nsock_t *);
+
+
+/* used internally */
+extern int     		nsock_error(nsock_t *, u_int);
+extern int     		nsock_generic_check(nsock_t *, int, u_long);
+
+#endif

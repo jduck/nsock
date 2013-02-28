@@ -1,81 +1,163 @@
 CC = @CC@
-CFLAGS = @CFLAGS@
-# LDFLAGS = -lnsl -lsocket
-EXTLDFLAGS = -s
+CFLAGS = @CFLAGS@ -I.
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
 
 VERSION = @VERSION@
-
+MAJORVER = @MAJORVER@
 LIBNAME = libnsock
+SONAME = $(LIBNAME).so.$(MAJORVER)
+DIRNAME = $(LIBNAME)-$(VERSION)
 
-OBJS = nsock_tcp_listen.o nsock_tcp_connect.o \
-	nsock_tcp_host.o nsock_tcp_free.o \
-	nsock_unix_listen.o nsock_unix_connect.o \
-	nsock_unix_free.o \
-	nsock_nonb.o nsock_resolve.o \
-	nsock_errors.o \
-	nsock_read.o nsock_readln.o \
-	nsock_write.o nsock_fdprintf.o \
-	nsock_io_pipe.o
-SRCS = nsock_tcp_listen.c nsock_tcp_connect.c \
-	nsock_tcp_host.c nsock_tcp_free.c \
-	nsock_unix_listen.c nsock_unix_connect.c \
-	nsock_unix_free.c \
-	nsock_nonb.c nsock_resolve.c \
-	nsock_errors.c \
-	nsock_read.c nsock_readln.c \
-	nsock_write.c nsock_fdprintf.c \
-	nsock_io_pipe.c
-INCS = nsock.h nsock_tcp.h nsock_unix.h nsock_resolve.h \
-	nsock_errors.h nsock_io_pipe.h
-
-all: srcs.mk static
-
-srcs.mk:
-	$(CC) $(CFLAGS) -MM *.c > srcs.mk
-
-shared: $(LIBNAME).so.$(VERSION)
-	ln -s $(LIBNAME).so.$(VERSION) $(LIBNAME).so
-
-static: $(LIBNAME).a
-
-targets:
-	@echo "valid targets: clean static shared distclean"
+RPMBUILDIR = $(HOME)/vault/rpmbuild
 
 
-$(LIBNAME).a: Makefile $(OBJS) $(SRCS) $(INCS)
-	ar rc $(LIBNAME).a $(OBJS)
-	ranlib $(LIBNAME).a
+OBJS = init.o \
+	new.o \
+	free.o \
+	errors.o \
+	socket.o \
+	close.o \
+	bind.o \
+	listen.o \
+	listen_init.o \
+	connect.o \
+	connect_init.o \
+	connect_out.o \
+	accept.o \
+	io_pipe.o \
+	nonb.o \
+	alarm.o \
+	read.o readln.o \
+	write.o fdprintf.o \
+	inet_host.o inet_resolve.o \
+	unix_resolve.o \
+	ssl.o
+
+DIRS = tests
+TARGS = @TARGS@
 
 
-$(LIBNAME).so.$(VERSION): Makefile $(OBJS) $(SRCS) $(INCS)
-	$(CC) $(CFLAGS) -fpic -shared -o $(LIBNAME).so.$(VERSION) $(OBJS) $(EXTLDFLAGS) $(LDFLAGS)
+DESTDIR = 
+prefix = @prefix@
+LIBPATH = $(DESTDIR)/$(prefix)/lib
+INCPATH = $(DESTDIR)/$(prefix)/include
 
-static-clean:
-	rm -f $(LIBNAME).a
-	
-shared-clean:
-	rm -f $(LIBNAME).so.$(VERSION) $(LIBNAME).so
-	
-clean: static-clean shared-clean
-	rm -f *.o 
 
-distclean: clean
-	rm -f Makefile config.* nsock_defs.h nsock_defs.h.in configure
-	cd config; make
-
-dist: distclean
-	cd ..; tar zcvvf $(LIBNAME)-$(VERSION).tgz $(LIBNAME)-$(VERSION) \
-		-X $(LIBNAME)-$(VERSION)/.ignore
+all: $(TARGS)
 
 .c.o:
 	$(CC) $(CFLAGS) -c $<
 
 
-# file dependencies
-nsock.h: nsock_defs.h
-nsock_defs.h: nsock_defs.h.in
+count: count.c
+	$(CC) $(CFLAGS) -o $@ $^
+
+srcs.mk: errors.h
+	$(CC) $(CFLAGS) -MM *.c > srcs.mk
+
+
+
+shared: $(LIBNAME).so.$(VERSION)
+
+$(LIBNAME).so.$(VERSION): Makefile $(OBJS)
+	$(CC) $(CFLAGS) -fpic -shared -o $(LIBNAME).so.$(VERSION) -Wl,-soname,$(SONAME) $(OBJS) $(LDFLAGS) $(LIBS)
+
+shared-clean:
+	rm -f $(LIBNAME).so.$(VERSION) $(LIBNAME).so $(SONAME)
+
+
+
+static: $(LIBNAME).a
+
+$(LIBNAME).a: Makefile $(OBJS)
+	ar rc $(LIBNAME).a $(OBJS) $(STATIC_LIBS)
+	ranlib $(LIBNAME).a
+	
+static-clean:
+	rm -f $(LIBNAME).a
+
+
+
+install-headers:
+	mkdir -p $(INCPATH)/nsock
+	install -m 644 nsock.h $(INCPATH)/nsock
+	install -m 644 errors.h $(INCPATH)/nsock
+	install -m 644 defs.h $(INCPATH)/nsock
+
+install-libs:
+	mkdir -p $(LIBPATH)
+	install -m 644 $(LIBNAME).a $(LIBPATH)
+	install -m 755 $(LIBNAME).so.$(VERSION) $(LIBPATH)
+	rm -f $(LIBPATH)/$(SONAME)
+	cd $(LIBPATH) && ln -s $(LIBNAME).so.$(VERSION) $(SONAME)
+	rm -f $(LIBPATH)/$(LIBNAME).so
+	cd $(LIBPATH) && ln -s $(LIBNAME).so.$(VERSION) $(LIBNAME).so
+	
+install: install-headers install-libs
+	
+
+targets:
+	@echo "valid targets: clean static shared distclean"
+
+
+
+sub-dirs:
+	for ii in $(DIRS); do cd $$ii; \
+		test -f config.status || ./configure --with-libnsock=..; \
+		make all; cd ..; \
+	done
+
+sub-dirs-clean:
+	for ii in $(DIRS); do \
+	    if test -f $$ii/Makefile; then \
+	       make -C $$ii clean; \
+	    fi; \
+	done
+
+sub-dirs-dist-clean:
+	for ii in $(DIRS); do \
+	    if test -f $$ii/Makefile; then \
+	       make -C $$ii distclean; \
+	    fi; \
+	done
+
+
+
+here-clean:
+	rm -f *.o srcs.mk count
+
+
+clean: static-clean shared-clean here-clean sub-dirs-clean
+
+
+distclean: clean sub-dirs-dist-clean
+	rm -f Makefile config.* defs.h defs.h.in configure
+	make -C config
+
+
+dist: distclean
+	cd ..; tar zcvvf $(DIRNAME)/no_dist/$(DIRNAME).tgz -X $(DIRNAME)/.ignore $(DIRNAME)
+
+
+rpms: dist
+	cp -a no_dist/$(DIRNAME).tgz $(RPMBUILDIR)/SOURCES
+	cp -a $(LIBNAME).spec $(RPMBUILDIR)/SPECS
+	pushd $(RPMBUILDIR) &> /dev/null ; rpmbuild -ba SPECS/$(LIBNAME).spec ; popd &> /dev/null
+	mv $(RPMBUILDIR)/SRPMS/$(DIRNAME)* no_dist/RPMS
+	mv $(RPMBUILDIR)/RPMS/*/$(LIBNAME)-* no_dist/RPMS
+	ls -l no_dist/RPMS/$(LIBNAME)*$(VERSION)*
+	rm -f $(RPMBUILDIR)/SPECS/$(LIBNAME).spec $(RPMBUILDIR)/SOURCES/$(DIRNAME).tgz
+	rm -rf $(RPMBUILDIR)/BUILD/$(DIRNAME)
+
+
+# file dependencies not covered by gcc -MM
+nsock.h: defs.h
+errors.h: errors.h.in count
+	./count < errors.h.in > errors.h
+defs.h: defs.h.in
 Makefile: configure
 configure: config/configure.in
-	cd config;make
+	make -C config
 
 include srcs.mk

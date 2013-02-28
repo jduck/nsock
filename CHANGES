@@ -1,3 +1,59 @@
+10/03/2005 	jjd 	- added oob inline flag
+
+03/27/2005 	jjd 	- released version 0.9.6
+
+06/17/2004 	jjd 	- fixed a bug when addrstr was empty during
+			  inet_resolve_fwd
+06/12/2004 	jjd 	- re-wrote inet_resolve_fwd to use getaddrinfo()
+			- re-wrote inet_resolve_rev to use getnameinfo()
+			- added IPv6 support to much of the code
+			- make clean no longer removes errors.h
+			
+06/11/2004 	jjd 	- changed version to 0.9.5
+			- added rpm building support
+
+06/10/2004 	jjd 	- changed verison to 0.9.4
+			- moved inet_connect_* to connect_* to
+			  accomodate for UDP and UNIX use.
+			- added socket domain/type parameters to
+			  connect_init
+			- removed options from nsock_io_pipe (nsc uses
+			  its own io_pipe.c now)
+			- fixed a bug in io_pipe_buf_flush() that
+			  would cause data to be repeated after a
+			  short write
+			- mvoed nsock_inet_listen() to
+			  nsock_listen_init() and accomodated for UDP
+			  and UNIX use 
+			
+05/29/2004 	jjd 	- got libnsock to compile on solaris 8 x86
+
+05/27/2004 	jjd 	- moved nsc to a seperate package
+			- changed version to 0.9.3
+			- added two options to nsock_io_pipe:
+			  - answer DONT and WONT to telnet protocol
+			  - additionally read/write from/to stdin/stdout
+			  
+05/26/2004 	jjd	- broke off nsock_unix_resolve()
+			- changed io_pipe to use nsock_t structs or
+			  supplied integer socket descriptors
+
+05/24/2004 	jjd 	- restructured the API to use the nsock_t
+			  structure for all calls (this structure now
+			  contains the socket descriptor)
+			- created nsock_accept
+			
+05/23/2004 	jjd	- added SSL support for connect/accept
+			- added a state flag to keep better tabs on
+			  the progress of use of the socket
+			- made code more modularized so it could be
+			  called in ways closer to the orignal calls
+			- added reverse resolution via nsock_resolve_rev()
+			- renamed nsock_resolve() to nsock_resolve_fwd()
+			- nsock_resolve() is now a macro for nsock_resolve_fwd()
+			- moved read/connect timeout values to the
+			  nsock_t structure
+
 05/21/2004 	jjd 	- changed version to 0.9.2
 			- implemented flag for REUSE_ADDR socket option
 			- fixed nsock_resolve() to allow resolution of

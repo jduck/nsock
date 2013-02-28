@@ -1,3 +1,8 @@
+/* defs.h.in.  Generated automatically from configure.in by autoheader 2.13.  */
+
+/* Define if your C compiler doesn't accept -c and -o together.  */
+#undef NO_MINUS_C_MINUS_O
+
 /* define this if you have (working) POSIX (O_NONBLOCK) non-blocking */
 #undef NBLOCK_POSIX
 
@@ -19,18 +24,8 @@
 /* define this if INET6 is available */
 #undef INET6
 
-/* define this if you have gethostbyname2(3) */
-#undef HAVE_GETHOSTBYNAME2
-
 /* define this if you have getaddrinfo(3) */
 #undef HAVE_GETADDRINFO
 
 /* define this if you have getnameinfo(3) */
 #undef HAVE_GETNAMEINFO
-
-/* define this if you have inet_pton(3) */
-#undef HAVE_INET_PTON
-
-/* define this if you have inet_ntop(3) */
-#undef HAVE_INET_NTOP
-

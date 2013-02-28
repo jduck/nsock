@@ -1,10 +1,15 @@
-all: nsock_defs.h.in configure
+all: defs.h.in configure
 
 configure:
-	autoconf2.13
+	autoconf
 	mv configure ..
 
-nsock_defs.h.in:
-	autoheader2.13
-	mv nsock_defs.h.in ..
+defs.h.in:
+	autoheader
+	mv defs.h.in ..
 
+
+clean:
+	rm -rf autom4te*
+	
+distclean: clean

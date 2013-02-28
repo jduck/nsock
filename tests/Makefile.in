@@ -1,18 +1,26 @@
-CC = gcc
-CFLAGS = -Wall -ggdb -I..
-LDFLAGS = -L.. -lnsock
+CC = @CC@
+CFLAGS = @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+INCLUDE = @INCLUDE@
+
+LIBNSOCK_DIR = @LIBNSOCK_DIR@
+
 
 include srcobj.mk
 
 all: nsock_test
 
 nsock_test: nsock_test.o $(OBJS)
-	$(CC) $(CFLAGS) -o nsock_test nsock_test.o $(OBJS) $(LDFLAGS)
+	$(CC) $(CFLAGS) $(INCLUDE) -o nsock_test nsock_test.o $(OBJS) $(LDFLAGS) $(LIBS)
 
 clean:
 	rm -f *.o nsock_test
 
+distclean: clean
+	rm -f Makefile config.*
+
 .c.o:
-	$(CC) $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) $(INCLUDE) -c $<
 
 # gcc -MM dependencie output

@@ -1,37 +1,39 @@
 
-void read_eof(void);
-void read_timedout(void);
-void read_valid(void);
-void tcp_connect_bind_fail(void);
-void tcp_connect_invalid_dest(void);
-void tcp_connect_invalid_dest_port(void);
-void tcp_connect_invalid_src(void);
-void tcp_connect_invalid_src_port(void);
-void tcp_connect_no_route(void);
-void tcp_connect_refused(void);
-void tcp_connect_timedout(void);
-void tcp_connect_valid(void);
-void tcp_listen_bad_host(void);
-void tcp_listen_bad_port(void);
-void tcp_listen_bind_fail(void);
+void inet_co_bind_failed(void);
+void inet_co_init_bad_dest(void);
+void inet_co_init_bad_dport(void);
+void inet_co_init_bad_sport(void);
+void inet_co_init_bad_src(void);
+void inet_co_no_route(void);
+void inet_co_refused(void);
+void inet_co_success(void);
+void inet_co_timeout(void);
+void inet_listen_bad_host(void);
+void inet_listen_bad_port(void);
+void inet_listen_bind_failure(void);
+void unix_resolve_long(void);
+void unix_resolve_path_too_long(void);
+void unix_resolve_short(void);
+void unix_resolve_sock_too_long(void);
 
 int
 main(void)
 {
-    read_eof();
-    read_timedout();
-    read_valid();
-    tcp_connect_bind_fail();
-    tcp_connect_invalid_dest();
-    tcp_connect_invalid_dest_port();
-    tcp_connect_invalid_src();
-    tcp_connect_invalid_src_port();
-    tcp_connect_no_route();
-    tcp_connect_refused();
-    tcp_connect_timedout();
-    tcp_connect_valid();
-    tcp_listen_bad_host();
-    tcp_listen_bad_port();
-    tcp_listen_bind_fail();
+    inet_co_bind_failed();
+    inet_co_init_bad_dest();
+    inet_co_init_bad_dport();
+    inet_co_init_bad_sport();
+    inet_co_init_bad_src();
+    inet_co_no_route();
+    inet_co_refused();
+    inet_co_success();
+    inet_co_timeout();
+    inet_listen_bad_host();
+    inet_listen_bad_port();
+    inet_listen_bind_failure();
+    unix_resolve_long();
+    unix_resolve_path_too_long();
+    unix_resolve_short();
+    unix_resolve_sock_too_long();
     return 0;
 }

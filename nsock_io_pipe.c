@@ -338,6 +338,7 @@ io_pipe_set_timeout(timeout)
 {
    struct sigaction nsa, osa;
    
+   memset(&nsa, 0, sizeof(nsa));
    nsa.sa_handler = io_pipe_alarm_handler;
    if (sigaction(SIGALRM, &nsa, &osa) == -1)
      {
@@ -369,6 +370,7 @@ io_pipe_reset_timeout(void)
 {
    struct sigaction nsa;
    
+   memset(&nsa, 0, sizeof(nsa));
    nsa.sa_handler = old_handler;
    if (sigaction(SIGALRM, &nsa, NULL) == -1)
      {

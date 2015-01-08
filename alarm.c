@@ -25,6 +25,8 @@ nsock_alarm(ns, timeout)
 {
    struct sigaction nsa, osa;
    
+   memset(&nsa, 0, sizeof(nsa));
+
    /* reset the timeout */
    if (timeout == 0)
      {
